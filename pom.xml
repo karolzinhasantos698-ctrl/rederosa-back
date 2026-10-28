@@ -38,6 +38,12 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- CONTROLLER / API -->
 
