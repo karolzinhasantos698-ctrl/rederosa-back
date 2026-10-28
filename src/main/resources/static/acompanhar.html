@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#bd3469"><title>Acompanhar • Rede Rosa</title>
+<link rel="stylesheet" href="../acompanhamento/acompanhar.css">
+<link rel="stylesheet" href="../acompanhamento/vendor/leaflet/leaflet.css"><link rel="stylesheet" href="../acompanhamento/mapa.css?v=2">
+<script src="../acompanhamento/vendor/leaflet/leaflet.js" defer></script><script src="../acompanhamento/mapa.js?v=2" defer></script><script src="../acompanhamento/acompanhar.js?v=2" defer></script>
+</head>
+<body>
+<header><img src="../acompanhamento/logo.png" width="72" height="74" alt="Logo Rede Rosa"><div><strong>Rede Rosa</strong><p>Apoio • Proteção • Empoderamento</p></div></header>
+<main>
+<section class="card" aria-labelledby="titulo">
+<p class="eyebrow">VOCÊ É PARTE DA REDE DE CUIDADO</p>
+<h1 id="titulo">Carregando acompanhamento…</h1>
+<p id="introducao">Não precisa entrar em uma conta. Você pode acompanhar por esta página.</p>
+<div id="situacao" class="situacao carregando" role="status" aria-live="polite"><span id="icone" aria-hidden="true">◷</span><h2 id="estado">Consultando o estado…</h2><p id="descricao">Aguarde um instante.</p></div>
+<section class="mapa-publico" aria-labelledby="tituloMapa"><h2 id="tituloMapa">Localização compartilhada</h2><div id="mapaTempoReal" class="mapa-tempo-real" role="region" aria-label="Mapa da localização da usuária"></div><p id="atualizacaoMapa" class="mapa-atualizacao" aria-live="off"></p><button id="centralizarMapa" class="secundario" type="button">Centralizar na usuária</button><p class="mapa-nota">A posição depende do GPS e da página aberta no aparelho dela. Confira sempre o horário da última atualização.</p></section>
+<div id="detalhes" hidden>
+<p class="label">HORÁRIO COMBINADO</p><p id="prazo" class="prazo"></p>
+<p id="contador" class="contador" aria-live="off"></p>
+<p id="confirmacao"></p>
+<a id="ligar" class="botao" hidden>Ligar para ela</a>
+</div>
+<p id="conexao" class="conexao" role="status" aria-live="polite"></p>
+<button id="atualizar" class="secundario" type="button">Atualizar agora</button>
+<p id="atualizado" class="atualizado"></p>
+</section>
+<aside class="nota"><strong>Como acompanhar</strong><p>Confira esta página no horário combinado. Ela atualiza automaticamente enquanto estiver aberta. Não enviamos alertas automáticos pelo WhatsApp ou por outro canal.</p><p>Se passar do horário, tente falar com ela. A ausência de confirmação, sozinha, não indica uma emergência.</p></aside>
+<p class="rodape">Um combinado simples. Uma pessoa de confiança. Mais cuidado.</p>
+</main>
+</body></html>
