@@ -1,6 +1,7 @@
 package com.example.rederosaback.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,6 +18,12 @@ import java.util.Locale;
 public class ChatIAController {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
+
+    private final String apiKey;
+
+    public ChatIAController(@Value("${groq.api.key:}") String apiKey) {
+        this.apiKey = apiKey.trim();
+    }
 
     // ============================================================
     // TESTE DO BACKEND
@@ -38,13 +45,11 @@ public class ChatIAController {
         // 1. PEGA A CHAVE DA GROQ
         // --------------------------------------------------------
 
-        String apiKey = System.getenv("GROQ_API_KEY");
-
         if (apiKey == null || apiKey.isBlank()) {
 
-            System.out.println("ERRO: GROQ_API_KEY não encontrada.");
+            System.out.println("ERRO: groq.api.key não configurada no application.properties.");
 
-            return "Erro: GROQ_API_KEY não foi configurada.";
+            return "Erro: configure groq.api.key no application.properties.";
         }
 
         // --------------------------------------------------------
