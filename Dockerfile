@@ -1,14 +1,11 @@
-
-FROM eclipse-temurin:17-jdk-alpine
-
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml ./
+RUN mvn -B -ntp dependency:go-offline
+COPY src ./src
+RUN mvn -B -ntp -DskipTests package
 
-COPY . .
-
-RUN chmod +x mvnw
-
-RUN ./mvnw clean package -DskipTests
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "target/rederosa-back-0.0.1-SNAPSHOT.jar"]
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/rederosa-back-*.jar ./app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
