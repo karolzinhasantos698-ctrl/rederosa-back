@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do computador à nuvem — Guia de deploy no Azure</title>
+<style>
+:root{--bg:#07111e;--panel:#102136;--ink:#f2f6fc;--muted:#b5c5da;--accent:#55dcbb;--blue:#75baff;--line:#294159}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Segoe UI,Arial,sans-serif}header{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);padding:9px 14px}button:hover{border-color:var(--accent)}button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button:disabled{opacity:.35;cursor:default}.slide{display:none;min-height:calc(100vh - 130px);padding:4vh 6vw 3vh;max-width:1600px;margin:auto}.slide.active{display:block}.tag{text-transform:uppercase;letter-spacing:.18em;font-size:13px;color:var(--accent);font-weight:700}h1{font-size:clamp(36px,4.6vw,68px);line-height:1.1;max-width:1100px;margin:22px 0}h2{font-size:clamp(29px,3.1vw,46px);line-height:1.16;margin:15px 0 24px}h3{font-size:21px;margin:0 0 13px;color:var(--blue)}p,li,td,th{font-size:clamp(16px,1.35vw,21px);line-height:1.5}p{margin:12px 0}.lead{font-size:clamp(21px,2vw,29px);color:var(--muted);max-width:1100px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.thirds{grid-template-columns:repeat(3,1fr)}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}.note{border-left:4px solid var(--accent);background:#122c36;padding:14px 20px;margin-top:22px;font-size:18px;line-height:1.5}.warn{border-color:#f1c875;background:#302b20}ul,ol{padding-left:25px;margin:10px 0}li{margin:8px 0}strong{color:#fff}code{font-family:Consolas,monospace;color:#b8f4e4;font-size:.9em}pre{padding:18px;background:#050d17;border:1px solid var(--line);border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(13px,1.08vw,17px);line-height:1.55}pre code{font-size:inherit}table{border-collapse:collapse;width:100%;background:var(--panel)}td,th{text-align:left;border-bottom:1px solid var(--line);padding:12px 17px}th{color:var(--blue);font-weight:600}.flow{display:flex;gap:12px;align-items:stretch;margin:28px 0}.node{flex:1;background:var(--panel);border:1px solid var(--line);padding:22px 15px;border-radius:14px;text-align:center;font-size:20px}.node small{display:block;color:var(--muted);font-size:15px;margin-top:10px}.arrow{align-self:center;color:var(--accent);font-size:30px}.small{font-size:15px;color:var(--muted)}footer{position:fixed;bottom:0;width:100%;height:74px;background:var(--bg);border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 4vw}#progress{flex:1;height:4px;background:var(--line);border-radius:5px}#bar{height:100%;background:var(--accent);border-radius:5px;width:0}#count{min-width:70px;color:var(--muted);font-variant-numeric:tabular-nums}a{color:var(--blue)}.sources li{font-size:18px}.key{display:inline-block;border:1px solid var(--line);padding:0 7px;border-radius:5px}details{margin-top:18px;color:var(--muted)}summary{cursor:pointer;font-size:16px}details p{font-size:17px}.checklist{columns:2;column-gap:40px}.checklist li{break-inside:avoid}body.overview .slide{display:block;min-height:auto;border-bottom:3px solid var(--line);padding-bottom:50px;margin-bottom:25px}body.overview footer{position:sticky} @media(max-width:850px){.grid,.thirds{grid-template-columns:1fr}.flow{flex-direction:column}.arrow{transform:rotate(90deg)}.slide{padding:25px 6vw 100px}.checklist{columns:1}header .hint{display:none}h1{font-size:40px}footer{gap:8px}footer button{padding:9px}.node{font-size:18px}}@media print{@page{size:A4 landscape;margin:10mm}body{background:white;color:#172b42}header,footer,details{display:none!important}.slide,.slide.active{display:block!important;min-height:0;height:185mm;page-break-after:always;break-after:page;padding:7mm 8mm;overflow:visible;max-width:none}.slide:last-of-type{page-break-after:auto}h1{font-size:38pt}h2{font-size:27pt;margin:8px 0 18px}h3{font-size:17pt}p,li,td,th{font-size:13pt;line-height:1.4}.lead{font-size:19pt}.card,table,.node{background:#f1f5f9;border-color:#bccad6;color:#172b42}.note{background:#e9f4ef;color:#172b42}.warn{background:#fff4d9}strong{color:#102236}.tag,h3,th{color:#076b80}pre{background:#f1f5f9;border-color:#bccad6;font-size:11pt}code{color:#14604e}.small{color:#40546a;font-size:10pt}.node small{color:#40546a}.grid{gap:16px}.card{padding:17px}.flow{margin:18px 0}.sources li{font-size:13pt}}
+</style>
+</head>
+<body>
+<header><span>GUIA PRÁTICO · AZURE + JAVA + MYSQL</span><span class="hint">← → navegar · F tela cheia · O visão geral · P PDF</span><button id="full" type="button">Tela cheia</button></header>
+<main>
+<section class="slide active"><div class="tag">01 · Objetivo</div><h1>Do computador<br>à nuvem.</h1><p class="lead">Como publicar um backend Spring Boot, um banco MySQL e um frontend estático em uma máquina virtual Azure.</p><div class="grid thirds" style="margin-top:35px"><div class="card"><h3>Entender</h3><p>O papel de cada componente e o caminho de uma requisição.</p></div><div class="card"><h3>Configurar</h3><p>VM, banco, serviço Java, Nginx, DNS e HTTPS.</p></div><div class="card"><h3>Manter</h3><p>Atualizações, diagnóstico, backups e controle de custos.</p></div></div><p class="small">Base: GUIA_DEPLOY_AZURE_GENERICO.md · Roteiro genérico, sem credenciais reais · Elaborado em 10/11/2026.</p></section>
+
+<section class="slide"><div class="tag">02 · Visão do processo</div><h2>Publicar é conectar várias etapas.</h2><div class="flow"><div class="node">Preparar<small>Código e configurações</small></div><span class="arrow">→</span><div class="node">Criar<small>VM, disco e rede</small></div><span class="arrow">→</span><div class="node">Instalar<small>Java, MySQL e Nginx</small></div><span class="arrow">→</span><div class="node">Publicar<small>JAR e frontend</small></div><span class="arrow">→</span><div class="node">Validar<small>HTTPS e uso real</small></div></div><div class="note">Cada etapa precisa de uma evidência: conexão SSH, teste do banco, serviço ativo, resposta da API e teste no navegador.</div><details><summary>Nota para apresentação</summary><p>Uma página abrindo não prova que o banco, o login ou as integrações estão funcionando. Validar as camadas separadamente facilita encontrar falhas.</p></details></section>
+
+<section class="slide"><div class="tag">03 · Arquitetura</div><h2>Quem faz o quê?</h2><div class="flow"><div class="node">Navegador<small>HTML, CSS e JavaScript</small></div><span class="arrow">→</span><div class="node">Nginx<small>HTTPS e arquivos estáticos</small></div><span class="arrow">→</span><div class="node">Spring Boot<small>Regras e API · 127.0.0.1:8080</small></div><span class="arrow">→</span><div class="node">MySQL<small>Persistência local</small></div></div><div class="grid"><div class="card"><h3>Arquivos e API no mesmo domínio</h3><p>O Nginx entrega o frontend e encaminha caminhos de API para o Java. Isso simplifica as URLs do navegador.</p></div><div class="card"><h3>Integrações externas</h3><p>O Java pode chamar serviços de IA, e-mail ou mapas. Esses serviços têm credenciais e limites próprios.</p></div></div><div class="note">Uma única VM facilita o início, mas uma falha nela afeta frontend, backend e banco juntos.</div></section>
+
+<section class="slide"><div class="tag">04 · Planejamento</div><h2>Defina os nomes antes dos comandos.</h2><table><tr><th>Recurso</th><th>Exemplo reutilizável</th><th>Função</th></tr><tr><td>Grupo / VM</td><td><code>rg-meuprojeto / vm-meuprojeto</code></td><td>Organização e servidor</td></tr><tr><td>Banco / usuário</td><td><code>meuprojeto / meuprojeto_app</code></td><td>Dados e acesso do backend</td></tr><tr><td>Serviço Linux</td><td><code>meuprojeto</code></td><td>Executar e reiniciar o Java</td></tr><tr><td>Aplicação</td><td><code>/opt/meuprojeto/backend.jar</code></td><td>Artefato executável</td></tr><tr><td>Segredos</td><td><code>/etc/meuprojeto/backend.env</code></td><td>Credenciais privadas</td></tr><tr><td>Frontend</td><td><code>/var/www/meuprojeto</code></td><td>Arquivos públicos</td></tr></table><p class="small">IP_PUBLICO, DOMINIO e SENHA_FORTE nos próximos exemplos são marcadores: substitua antes de executar.</p></section>
+
+<section class="slide"><div class="tag">05 · Assinatura Azure</div><h2>Crédito, cota e disponibilidade são diferentes.</h2><div class="grid"><div class="card"><h3>1. Crédito</h3><p>Saldo disponível e data de vencimento. Ter dinheiro na assinatura não libera automaticamente todos os recursos.</p></div><div class="card"><h3>2. Política de região</h3><p>Define onde a assinatura permite implantar. Consultar Política → Atribuições → Parâmetros.</p></div><div class="card"><h3>3. Cota de CPU</h3><p>Conferir o limite regional e o limite da família de VM em Cotas → Compute.</p></div><div class="card"><h3>4. Disponibilidade</h3><p>O tamanho precisa estar realmente implantável para aquela assinatura, região e configuração.</p></div></div><div class="note warn"><code>NotAvailableForSubscription</code> e “cota insuficiente” não são o mesmo problema. Conferir o erro antes de trocar o tamanho.</div></section>
+
+<section class="slide"><div class="tag">06 · Dimensionamento e custo</div><h2>Escolha pela carga, confirme pelo teste.</h2><table><tr><th>Cenário</th><th>Ponto de partida para avaliar</th></tr><tr><td>Protótipo e pouco acesso</td><td>2 vCPUs e 4 GiB de RAM</td></tr><tr><td>Mais espaço para Java e MySQL</td><td>2 vCPUs e 8 GiB de RAM</td></tr><tr><td>Competição ou uso simultâneo elevado</td><td>Teste de carga antes de definir capacidade</td></tr></table><div class="grid" style="margin-top:22px"><div class="card"><h3>Cadastros ≠ simultaneidade</h3><p>Mil contas ao longo do mês podem pesar menos que muitas pessoas consultando o chat e o GPS ao mesmo tempo.</p></div><div class="card"><h3>Custo total</h3><p>VM + disco + IP + tráfego + backups + serviços extras. API externa pode ser cobrada fora do Azure.</p></div></div><p class="small">RAM não é espaço de disco. Série B tem créditos de CPU; avaliar carga sustentada. Preço e disponibilidade devem ser conferidos no portal.</p></section>
+
+<section class="slide"><div class="tag">07 · Criar a VM</div><h2>Configuração inicial no portal.</h2><div class="grid"><div class="card"><h3>Básico</h3><ul><li>Assinatura e grupo exclusivos do projeto.</li><li>Região autorizada com cota e tamanho disponível.</li><li>Ubuntu Server 24.04 LTS, arquitetura x64.</li><li>Chave pública SSH; usuário <code>azureuser</code>.</li><li>Spot desativado para evitar retomada de capacidade.</li></ul></div><div class="card"><h3>Disco e rede</h3><ul><li>SSD Standard LRS; 30–32 GiB para avaliar inicialmente.</li><li>Disco persistente para guardar o MySQL.</li><li>IP público estático e grupo de segurança.</li><li>Sem balanceador para esta arquitetura simples.</li><li>Revisar preço, validação e ciclo de exclusão dos recursos.</li></ul></div></div><div class="note">Para uma VM simples, “sem redundância de infraestrutura” pode ampliar opções, mas não resolve uma cota zero nem oferece alta disponibilidade.</div></section>
+
+<section class="slide"><div class="tag">08 · Rede</div><h2>Abra apenas as portas necessárias.</h2><table><tr><th>Porta</th><th>Origem</th><th>Finalidade</th></tr><tr><td><strong>22 / TCP</strong></td><td>IP público do administrador</td><td>Acesso SSH</td></tr><tr><td><strong>80 / TCP</strong></td><td>Internet</td><td>HTTP e validação do certificado</td></tr><tr><td><strong>443 / TCP</strong></td><td>Internet</td><td>Site com HTTPS</td></tr><tr><td>8080</td><td>Somente local</td><td>Java atrás do Nginx</td></tr><tr><td>3306</td><td>Somente local</td><td>MySQL acessado pelo backend</td></tr></table><div class="note">O certificado não cria a regra 443 no Azure. TLS configurado com porta bloqueada resulta em timeout no navegador.</div></section>
+
+<section class="slide"><div class="tag">09 · SSH</div><h2>Saiba em qual computador está executando.</h2><div class="grid"><div class="card"><h3>PowerShell do Windows</h3><pre><code>ssh -i "$env:USERPROFILE\Downloads\vm-meuprojeto_key.pem" azureuser@IP_PUBLICO</code></pre><p>Usado para conectar, compilar localmente e enviar arquivos com <code>scp</code>.</p></div><div class="card"><h3>Terminal Ubuntu</h3><pre><code>azureuser@vm-meuprojeto:~$</code></pre><p>Instala pacotes e configura banco, Nginx e serviços. Após uma queda do SSH, reconecte antes de continuar.</p></div></div><ul><li>Não copie o prefixo do terminal junto com o comando.</li><li>Verifique a identidade do servidor na primeira conexão.</li><li>Proteja o arquivo <code>.pem</code>; não o envie ao Git ou ao chat.</li><li>Se a chave for recusada por permissões abertas, ajuste a ACL no Windows conforme o guia.</li></ul></section>
+
+<section class="slide"><div class="tag">10 · Dependências</div><h2>Instale e valide cada serviço.</h2><pre><code># Ubuntu: executar uma linha por vez
+sudo apt update
+sudo apt install -y openjdk-17-jre-headless mysql-server nginx python3
+sudo systemctl enable --now mysql nginx
+java -version
+sudo systemctl is-active mysql nginx</code></pre><div class="grid"><div class="card"><h3>Resultado esperado</h3><p>Java na versão exigida pelo projeto e duas linhas <code>active</code>, uma para MySQL e outra para Nginx.</p></div><div class="card"><h3>Erro comum</h3><p><code>apt update</code> atualiza o catálogo, mas não instala os programas. É necessário executar <code>apt install</code>.</p></div></div><p class="small">Se o projeto exige Java 21 ou outra versão, ajuste o pacote e valide a compatibilidade do JAR.</p></section>
+
+<section class="slide"><div class="tag">11 · MySQL</div><h2>Banco próprio, usuário próprio.</h2><pre><code># Ubuntu
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS meuprojeto CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+sudo env MYSQL_HISTFILE=/dev/null mysql</code></pre><pre><code>-- Dentro do MySQL; substituir a senha antes de executar
+CREATE USER 'meuprojeto_app'@'localhost' IDENTIFIED BY 'SENHA_FORTE';
+GRANT ALL PRIVILEGES ON meuprojeto.* TO 'meuprojeto_app'@'localhost';
+EXIT;</code></pre><pre><code># Ubuntu: digitar a senha no prompt
+mysql -u meuprojeto_app -p -D meuprojeto -e "SELECT 1;"</code></pre><div class="note">Esperado: retorno <code>1</code>. As permissões acima permitem gerenciar a estrutura desse banco; reduzir privilégios quando houver migrações separadas. Não usar root no backend.</div></section>
+
+<section class="slide"><div class="tag">12 · Build</div><h2>Gere um artefato testado antes de enviar.</h2><pre><code># PowerShell no Windows
+cd C:\CAMINHO\backend
+.\mvnw.cmd clean package</code></pre><div class="grid"><div class="card"><h3>Prossiga com BUILD SUCCESS</h3><p>O Maven compila, testa e empacota. Envie o JAR executável de <code>target</code>, não o arquivo <code>.jar.original</code>.</p></div><div class="card"><h3>Teste dependente de banco local</h3><p>Corrigir a configuração isolada do teste quando adequado. Não ignorar testes automaticamente para publicar.</p></div></div><pre><code>scp -i "$env:USERPROFILE\Downloads\vm-meuprojeto_key.pem" "C:\CAMINHO\backend\target\ARQUIVO.jar" azureuser@IP_PUBLICO:/home/azureuser/backend-next.jar</code></pre></section>
+
+<section class="slide"><div class="tag">13 · Separação de permissões</div><h2>O processo Java não precisa ser administrador.</h2><pre><code># Primeira configuração, no Ubuntu
+sudo useradd --system --user-group --home-dir /opt/meuprojeto --shell /usr/sbin/nologin meuprojeto
+sudo install -d -o root -g meuprojeto -m 0750 /opt/meuprojeto
+sudo install -d -o root -g root -m 0700 /etc/meuprojeto
+sudo install -o root -g meuprojeto -m 0640 /home/azureuser/backend-next.jar /opt/meuprojeto/backend.jar</code></pre><div class="note">O usuário <code>meuprojeto</code> executa a aplicação e lê o JAR, mas não altera o código. O administrador SSH continua sendo <code>azureuser</code>.</div><p>Se o projeto grava arquivos, crie um diretório próprio para dados e conceda permissão somente nele. Confira usuários e diretórios existentes antes de repetir a configuração.</p></section>
+
+<section class="slide"><div class="tag">14 · Variáveis de ambiente</div><h2>Configuração privada, fora do código.</h2><pre><code>sudo nano /etc/meuprojeto/backend.env</code></pre><pre><code>SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/meuprojeto
+SPRING_DATASOURCE_USERNAME=meuprojeto_app
+SPRING_DATASOURCE_PASSWORD="SENHA_REAL"
+SERVER_ADDRESS=127.0.0.1
+SERVER_PORT=8080
+SERVER_FORWARD_HEADERS_STRATEGY=framework
+SPRING_JPA_SHOW_SQL=false</code></pre><div class="grid"><div><p>Salvar: <strong>Ctrl+O → Enter → Ctrl+X</strong>.</p><pre><code>sudo chmod 600 /etc/meuprojeto/backend.env</code></pre></div><div><p>Acrescente somente integrações que o código realmente lê, por exemplo <code>GROQ_API_KEY</code>. Nunca coloque segredos no frontend.</p></div></div><p class="small">Esse arquivo não é um script: não usar export nem esperar expansão automática de variáveis. Escapar aspas e barras quando necessário.</p></section>
+
+<section class="slide"><div class="tag">15 · Persistência do banco</div><h2>Escolha como as tabelas serão evoluídas.</h2><div class="grid"><div class="card"><h3>Migrações controladas</h3><p>Flyway ou Liquibase registram alterações versionadas. Hibernate em <code>validate</code> pode conferir a estrutura.</p><p>É preciso que o projeto já esteja preparado para essa estratégia.</p></div><div class="card"><h3>Protótipo com Hibernate update</h3><p><code>spring.jpa.hibernate.ddl-auto=update</code> pode criar e ajustar tabelas. Faça backup antes de alterar entidades.</p><p>Não é uma estratégia completa de migração e rollback.</p></div></div><div class="note warn">Não usar <code>create</code> ou <code>create-drop</code> no banco persistente de produção: a estrutura e os dados podem ser recriados ou apagados.</div><p>Banco novo começa vazio. Criá-lo não importa os cadastros do computador de desenvolvimento.</p></section>
+
+<section class="slide"><div class="tag">16 · systemd</div><h2>Transforme o JAR em serviço.</h2><div class="grid"><pre><code># /etc/systemd/system/meuprojeto.service
+[Unit]
+Description=Backend Meu Projeto
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+User=meuprojeto
+Group=meuprojeto
+WorkingDirectory=/opt/meuprojeto
+EnvironmentFile=/etc/meuprojeto/backend.env
+ExecStart=/usr/bin/java -Xms128m -Xmx1g -jar /opt/meuprojeto/backend.jar
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target</code></pre><div><h3>Por que usar?</h3><ul><li>Continua funcionando após sair do SSH.</li><li>Inicia com a máquina.</li><li>Reinicia após falha.</li><li>Centraliza os logs.</li></ul><pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now meuprojeto
+sudo systemctl status meuprojeto --no-pager -l</code></pre><p class="small"><code>-Xmx1g</code> limita o heap, não toda a memória do processo Java.</p></div></div></section>
+
+<section class="slide"><div class="tag">17 · Frontend</div><h2>Localhost não é o servidor para o visitante.</h2><div class="grid"><div class="card"><h3>Endereço incorreto em produção</h3><pre><code>fetch('http://localhost:8080/api/usuarios')</code></pre><p>O navegador tenta acessar o próprio computador ou celular da pessoa.</p></div><div class="card"><h3>Mesma origem do site</h3><pre><code>fetch('/api/usuarios')</code></pre><p>O navegador chama o domínio HTTPS atual, e o Nginx encaminha à API.</p></div></div><ul><li>Revisar URLs, portas e configuração de base da API no código fonte.</li><li>Enviar somente HTML, CSS, JS, imagens ou a saída estática do build.</li><li>Não publicar <code>.env</code>, <code>.git</code>, dumps ou chaves.</li></ul><div class="note">React/Vue podem gerar arquivos estáticos. Aplicações com renderização no servidor exigem outro processo e ajustes neste roteiro.</div></section>
+
+<section class="slide"><div class="tag">18 · Publicação do frontend</div><h2>Envie, confira a estrutura e publique.</h2><pre><code># PowerShell
+scp -i "$env:USERPROFILE\Downloads\vm-meuprojeto_key.pem" -r "C:\CAMINHO\frontend" azureuser@IP_PUBLICO:/home/azureuser/frontend-inicial</code></pre><pre><code># Ubuntu
+find /home/azureuser/frontend-inicial -maxdepth 3 -name index.html
+sudo install -d -m 0755 /var/www/meuprojeto
+sudo cp -a /home/azureuser/frontend-inicial/. /var/www/meuprojeto/
+sudo chown -R root:root /var/www/meuprojeto
+sudo find /var/www/meuprojeto -type d -exec chmod 755 {} +
+sudo find /var/www/meuprojeto -type f -exec chmod 644 {} +</code></pre><div class="note">Confirme que o resultado é <code>/var/www/meuprojeto/index.html</code>. Uma subpasta inesperada ou uma cópia não executada é causa frequente de 404.</div></section>
+
+<section class="slide"><div class="tag">19 · Nginx</div><h2>Um domínio, dois destinos.</h2><div class="grid"><pre><code># /etc/nginx/sites-available/meuprojeto
+server {
+    listen 80;
+    server_name DOMINIO;
+    root /var/www/meuprojeto;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+}</code></pre><div><h3>Adapte às rotas reais</h3><p>O exemplo encaminha <code>/api/</code>. Rotas como <code>/login</code> e <code>/chat</code> precisam de blocos adicionais se existirem.</p><p>Sem barra após <code>8080</code>, o prefixo da API é preservado.</p><p>SPA, WebSocket, SSE e uploads exigem ajustes específicos.</p></div></div></section>
+
+<section class="slide"><div class="tag">20 · Validar proxy</div><h2>Teste antes de abrir o navegador.</h2><pre><code>sudo ln -sfn /etc/nginx/sites-available/meuprojeto /etc/nginx/sites-enabled/meuprojeto
+sudo nginx -t
+# Recarregar somente se a validação passar:
+sudo systemctl reload nginx
+
+curl -I -H 'Host: DOMINIO' http://127.0.0.1/
+curl -i -H 'Host: DOMINIO' http://127.0.0.1/api/ENDPOINT_REAL</code></pre><table><tr><th>Resultado</th><th>O que investigar</th></tr><tr><td>200 com conteúdo esperado</td><td>Essa rota respondeu; continuar os testes funcionais.</td></tr><tr><td>404</td><td>Arquivo, caminho, domínio ou rota incorreta.</td></tr><tr><td>502</td><td>Backend parado, iniciando ou porta errada.</td></tr></table></section>
+
+<section class="slide"><div class="tag">21 · DNS e HTTPS</div><h2>Do IP ao endereço seguro.</h2><ol><li>No recurso de IP público, escolha um rótulo DNS disponível e salve.</li><li>Copie o nome completo mostrado pelo Azure; não adivinhe o sufixo.</li><li>Configure esse nome no <code>server_name</code> do Nginx.</li><li>Confirme DNS e acesso HTTP antes de emitir o certificado.</li></ol><pre><code>getent ahostsv4 DOMINIO
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d DOMINIO --redirect</code></pre><div class="note">Informe um e-mail de contato e avalie os termos. O Certbot configura TLS e redirecionamento, mas a porta 443 precisa estar liberada na rede.</div></section>
+
+<section class="slide"><div class="tag">22 · Certificado</div><h2>Emitir é o começo; renovar faz parte.</h2><pre><code>sudo nginx -t
+curl -I https://DOMINIO/
+sudo certbot renew --dry-run
+systemctl list-timers --all | grep -i certbot</code></pre><div class="grid"><div class="card"><h3>Teste externo falhou?</h3><pre><code>curl -I --resolve DOMINIO:443:127.0.0.1 https://DOMINIO/</code></pre><p>Se funcionar localmente, investigar rede, DNS e firewall antes de reemitir certificados.</p></div><div class="card"><h3>Cuidados</h3><ul><li>Manter a validação HTTP acessível conforme a configuração.</li><li>Não sobrescrever o arquivo TLS com uma versão antiga.</li><li>Não divulgar a chave privada do certificado.</li></ul></div></div></section>
+
+<section class="slide"><div class="tag">23 · Testes e diagnóstico</div><h2>Isole as camadas, sem adivinhar a causa.</h2><table><tr><th>Etapa</th><th>Teste</th><th>O que acrescenta</th></tr><tr><td>1. Backend</td><td><code>http://127.0.0.1:8080/api/...</code></td><td>Java e dependências da aplicação</td></tr><tr><td>2. Proxy local</td><td>Nginx local com cabeçalho Host</td><td>Roteamento do Nginx</td></tr><tr><td>3. HTTPS público</td><td><code>https://DOMINIO/api/...</code></td><td>DNS, TLS e caminho público</td></tr><tr><td>4. Navegador</td><td>DevTools → Network → requisição</td><td>URL, status, resposta e tempo</td></tr></table><div class="note">Um cancelamento exato após 25 segundos pode revelar o limite do frontend; ele não prova que login, chave ou banco causaram a demora. Repetir testes comparáveis e medir.</div><p>Alterar uma coisa por vez. Guardar evidências antes de mudar modelo, timeout, infraestrutura ou credenciais.</p></section>
+
+<section class="slide"><div class="tag">24 · Checklist funcional</div><h2>Teste o comportamento que o usuário precisa.</h2><ul class="checklist"><li>Página inicial, imagens e navegação.</li><li>Cadastro e login.</li><li>Permissões entre contas diferentes.</li><li>Persistência após reiniciar o serviço.</li><li>API sem localhost ou conteúdo misto.</li><li>Integrações e erros do provedor.</li><li>Links compartilhados em outro aparelho.</li><li>GPS em HTTPS, se existir.</li><li>Recuperação de senha segura.</li><li>Uso após fechar o terminal SSH.</li><li>Comportamento sob carga.</li><li>Proteção dos arquivos privados.</li></ul><div class="note">Usar dados fictícios. Uma resposta HTTP 200 isolada não equivale a validar o sistema inteiro.</div></section>
+
+<section class="slide"><div class="tag">25 · Atualizações</div><h2>Atualize com possibilidade de recuperação.</h2><div class="grid"><div class="card"><h3>Backend</h3><ol><li>Executar build e testes.</li><li>Enviar JAR com nome temporário.</li><li>Fazer backup quando houver risco de mudança de banco.</li><li>Guardar JAR anterior e parar o serviço.</li><li>Instalar novo JAR e iniciar.</li><li>Validar endpoint e logs.</li></ol></div><div class="card"><h3>Frontend e configuração</h3><ul><li>Enviar para pasta nova e conferir estrutura.</li><li>Guardar versão publicada antes da troca.</li><li>Revisar arquivos antigos que não deveriam permanecer públicos.</li><li>Alterou <code>.env</code>? Reiniciar o backend.</li><li>Alterou <code>.service</code>? Executar <code>daemon-reload</code> e reiniciar.</li></ul></div></div><div class="note warn">Não sobrescrever um JAR em uso. Voltar o JAR anterior não desfaz alterações de schema ou dados.</div></section>
+
+<section class="slide"><div class="tag">26 · Backup</div><h2>Uma cópia no mesmo disco não basta.</h2><pre><code># Ubuntu
+mkdir -p ~/backups
+chmod 700 ~/backups
+(umask 077; sudo mysqldump --single-transaction --no-tablespaces --databases meuprojeto > ~/backups/meuprojeto-$(date +%Y%m%d-%H%M%S).sql)</code></pre><div class="grid thirds"><div class="card"><h3>Verificar</h3><p>Comando sem erro, arquivo não vazio e dados esperados. Não alterar schema durante o dump.</p></div><div class="card"><h3>Externalizar</h3><p>Guardar cópia protegida fora da VM. Dumps podem conter dados pessoais.</p></div><div class="card"><h3>Restaurar</h3><p>Testar recuperação em ambiente isolado. Backup não testado deixa incerteza.</p></div></div><p class="small">Guardar também configurações e versões dos artefatos. Confirmar alvo e backup antes de DROP, TRUNCATE ou importações destrutivas.</p></section>
+
+<section class="slide"><div class="tag">27 · Operação</div><h2>Os comandos para acompanhar a aplicação.</h2><div class="grid"><div class="card"><h3>Saúde e logs</h3><pre><code>sudo systemctl status meuprojeto --no-pager -l
+sudo journalctl -u meuprojeto -n 100 --no-pager
+sudo journalctl -u meuprojeto -f
+sudo tail -n 50 /var/log/nginx/error.log</code></pre><p class="small">Ctrl+C encerra a leitura dos logs, não o serviço.</p></div><div class="card"><h3>Memória, disco e portas</h3><pre><code>free -h
+df -h /
+sudo du -sh /var/lib/mysql /var/www/meuprojeto
+sudo journalctl --disk-usage
+sudo ss -lntp</code></pre><p class="small">Logs podem conter informações pessoais. Revisar antes de compartilhar.</p></div></div><div class="note">Estabeleça alertas e revisão periódica de saldo, vencimento de créditos e uso real. Orçamento não é necessariamente um bloqueio automático de cobrança.</div></section>
+
+<section class="slide"><div class="tag">28 · Entrega</div><h2>O que significa estar pronto?</h2><div class="grid"><div class="card"><h3>Operação validada</h3><ul><li>Serviço inicia automaticamente.</li><li>API e frontend funcionam por HTTPS.</li><li>Banco tem usuário exclusivo.</li><li>Fluxos e autorização testados.</li><li>Capacidade avaliada conforme uso esperado.</li></ul></div><div class="card"><h3>Continuidade planejada</h3><ul><li>Segredos privados e credenciais expostas revogadas.</li><li>SSH restrito e portas mínimas.</li><li>Backup externo com restauração testada.</li><li>Renovação de certificado validada.</li><li>Atualização, rollback e custos documentados.</li></ul></div></div><p class="lead">Cada projeto precisa adaptar rotas, variáveis, versão do Java e estratégia de banco. O roteiro é reutilizável; a validação precisa ser específica.</p></section>
+
+<section class="slide"><div class="tag">29 · Material de apoio</div><h2>Guia e referências para consulta.</h2><ul class="sources"><li><a href="GUIA_DEPLOY_AZURE_GENERICO.md">Guia genérico completo do projeto</a> — comandos, variações e diagnóstico.</li><li><a href="https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal">Microsoft Learn: criar VM Linux</a>.</li><li><a href="https://learn.microsoft.com/en-us/azure/virtual-machines/quotas">Microsoft Learn: cotas de máquinas virtuais</a>.</li><li><a href="https://azure.microsoft.com/en-us/pricing/calculator/">Calculadora de preços do Azure</a>.</li><li><a href="https://eff-certbot.readthedocs.io/en/stable/using.html">Certbot: configuração e renovação</a>.</li><li><a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html">Nginx: proxy HTTP</a>.</li><li><a href="https://docs.spring.io/spring-boot/reference/">Spring Boot: referência</a>.</li></ul><div class="note">Para compartilhar em PDF: clique em “Imprimir / PDF”, escolha “Salvar como PDF” e confira a prévia em paisagem. Para apresentar, use as setas e tela cheia.</div><p class="small">As referências são materiais de consulta. Os comandos desta apresentação são exemplos baseados no guia e precisam ser adaptados ao ambiente.</p></section>
+</main>
+<footer><button id="prev" type="button" aria-label="Slide anterior">← Anterior</button><span id="count" aria-live="polite"></span><div id="progress" role="progressbar" aria-label="Progresso da apresentação" aria-valuemin="1"><div id="bar"></div></div><button id="next" type="button" aria-label="Próximo slide">Próximo →</button><button id="all" type="button" aria-pressed="false">Visão geral</button><button id="print" type="button">Imprimir / PDF</button></footer>
+<script>
+(() => {
+const slides=[...document.querySelectorAll('.slide')],prev=document.getElementById('prev'),next=document.getElementById('next'),all=document.getElementById('all');
+let current=0;
+function show(n){current=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>{s.classList.toggle('active',i===current);s.setAttribute('aria-label',`Slide ${i+1} de ${slides.length}`)});document.getElementById('count').textContent=`${current+1} / ${slides.length}`;document.getElementById('bar').style.width=`${(current+1)/slides.length*100}%`;document.getElementById('progress').setAttribute('aria-valuemax',slides.length);document.getElementById('progress').setAttribute('aria-valuenow',current+1);prev.disabled=current===0;next.disabled=current===slides.length-1;history.replaceState(null,'',`#slide-${current+1}`);if(!document.body.classList.contains('overview'))window.scrollTo(0,0)}
+function overview(){const on=document.body.classList.toggle('overview');all.setAttribute('aria-pressed',on);all.textContent=on?'Voltar aos slides':'Visão geral';if(on)slides[current].scrollIntoView({block:'start'})}
+async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{document.getElementById('full').textContent='Use F11 no navegador'}}
+prev.addEventListener('click',()=>show(current-1));next.addEventListener('click',()=>show(current+1));all.addEventListener('click',overview);document.getElementById('print').addEventListener('click',()=>window.print());document.getElementById('full').addEventListener('click',fullscreen);
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.altKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(['ArrowRight','PageDown','ArrowLeft','PageUp','Home','End',' '].includes(e.key)){if(document.body.classList.contains('overview'))return;e.preventDefault();if(['ArrowRight','PageDown',' '].includes(e.key))show(current+1);if(['ArrowLeft','PageUp'].includes(e.key))show(current-1);if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)}if(e.key.toLowerCase()==='f')fullscreen();if(e.key.toLowerCase()==='o')overview();if(e.key.toLowerCase()==='p')window.print()});
+const initial=Number((location.hash.match(/^#slide-(\d+)$/)||[])[1]);show(Number.isFinite(initial)&&initial>0?initial-1:0);
+})();
+</script>
+</body>
+</html>

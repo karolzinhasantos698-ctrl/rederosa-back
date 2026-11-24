@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: rederosa-back
+    runtime: docker
+    plan: free
+    healthCheckPath: /usuarias/teste
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: AIVEN_DB_USER
+        sync: false
+      - key: AIVEN_DB_PASSWORD
+        sync: false
