@@ -1,0 +1,51 @@
+Continuação do diário de bordo
+Registros complementares das melhorias realizadas após a primeira versão do protótipo.
+Comunidade e organização das conversas
+Data: ____________________     Participantes: ______________________________
+Descrição das atividades — A estrutura inicial evoluiu para três salas temáticas: Apoio emocional, Direitos das mulheres e Segurança. A conversa com a assistente Rosa ficou em uma área separada.
+Resultados e encaminhamentos — As mensagens passaram a ficar no banco e a exigir sessão para leitura e envio. Foi incluído o registro de denúncias. A documentação técnica relata testes com duas contas fictícias, incluindo envio, recebimento, histórico e persistência após recarregar.
+Lições aprendidas — A separação entre as salas e a assistente ajuda a identificar quem participa de cada conversa. Registrar uma denúncia é uma etapa do fluxo. A análise humana das denúncias permanece como melhoria futura.
+Check-in Seguro com acompanhamento
+Data: ____________________     Participantes: ______________________________
+Descrição das atividades — O check-in passou a permitir acompanhamento com prazo de 15, 30 ou 60 minutos. A usuária escolhe com quem compartilhar o link. Com a permissão de localização, o mapa mostra a posição mais recente.
+Resultados e encaminhamentos — O prazo e o histórico ficam no banco. A usuária pode confirmar que está bem, estender o prazo ou encerrar. O sistema indica atraso quando o prazo termina sem confirmação.
+Lições aprendidas — Na demonstração, é importante diferenciar o estado de atraso de um alerta automático e explicar como a permissão de localização e o compartilhamento do link funcionam.
+Banco de dados e publicação
+Configuração do banco e testes do backend
+Data: ____________________     Participantes: ______________________________
+Descrição das atividades — O backend Spring Boot foi configurado para acessar o banco MySQL rederosa no Aiven via JDBC com TLS. As credenciais são fornecidas pela configuração do ambiente.
+Resultados e encaminhamentos — A primeira tentativa falhou porque as credenciais do console do IntelliJ não estavam disponíveis para o Spring. Após configurar o ambiente, a aplicação iniciou e a consulta confirmou nove tabelas. Em uma execução registrada da suíte Maven, os 30 testes passaram.
+Lições aprendidas — O console de banco e o Spring usam configurações independentes. Os testes com H2 permitem verificar o backend sem depender do Aiven.
+Publicação e integração do frontend
+Data: ____________________     Participantes: ______________________________
+Descrição das atividades — A API foi publicada no Render e o frontend na Vercel. O arquivo js/api.js foi ajustado para usar a URL pública do Render no domínio da Vercel.
+Resultados e encaminhamentos — A primeira publicação carregava a tela, mas as chamadas ainda iam para o próprio domínio da Vercel. O ajuste foi aplicado à branch de produção do repositório ligado à Vercel e, após a publicação, o login chegou à página inicial autenticada.
+Lições aprendidas — Publicar a interface e conectá-la à API são etapas distintas. A atualização precisa chegar ao repositório que a Vercel acompanha.
+Arquitetura do protótipo publicado
+Navegador → Vercel (interface) → Render (API Spring Boot) → Aiven (MySQL)
+Resultados e reflexão
+Verificação
+Resultado observado
+Evidência a anexar
+MySQL no Aiven
+9 tabelas presentes.
+Consulta com os nomes das tabelas.
+Testes do backend
+30 testes aprovados na execução registrada.
+Resumo da saída do Maven.
+Salas de conversa
+Teste documentado com 2 contas fictícias.
+Capturas de envio e recebimento.
+Integração publicada
+Login chegou à página autenticada.
+Captura anonimizada da página inicial.
+Interpretação dos resultados
+As verificações registradas mostram que o protótipo integrou a interface, a API e o banco, e permitiu concluir o login. Elas avaliam o funcionamento técnico. Para avaliar se a solução facilita o acesso a recursos de apoio, a equipe precisa discutir os resultados em relação à sua hipótese e indicar como observar esse efeito.
+Discussão e conclusão da equipe em relação à hipótese: _________________________
+________________________________________________________________________
+Limites e próximos passos
+Usar contas fictícias na demonstração e retirar das imagens dados pessoais, credenciais e localização. Revisar o fluxo de recuperação de senha antes de usar contas reais.
+Referências e anexos
+Regulamento do 15º Circuito de Ciências das Escolas Públicas do Distrito Federal, item 5.3 e Anexo III. Registros técnicos do projeto: ACOMPANHAMENTO.md, COMUNIDADE.md, Guia de Configuração da Rede Rosa e Notas da Versão 3db82f5.
+Completar as fontes consultadas pela equipe e anexar as evidências disponíveis indicadas na tabela.
+Nota de elaboração: ChatGPT (OpenAI) foi usado como apoio à organização e à redação preliminar dos registros técnicos. A equipe deve conferir os registros, preencher os campos e elaborar a interpretação final com base nas próprias observações.
